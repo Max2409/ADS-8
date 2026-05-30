@@ -1,11 +1,12 @@
 // Copyright 2021 NNTU-CS
-#include "bst.h"
 #include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include "bst.h"
 
 void makeTree(BST<std::string> &tree, const char *filename) {
     std::ifstream file(filename);
@@ -25,7 +26,6 @@ void makeTree(BST<std::string> &tree, const char *filename) {
             }
         }
     }
-    // последнее слово в файле
     if (!currentWord.empty()) {
         tree.insert(currentWord);
     }
@@ -35,13 +35,10 @@ void makeTree(BST<std::string> &tree, const char *filename) {
 void printFreq(BST<std::string> &tree) {
     std::vector<std::pair<std::string, int>> freqList;
     tree.inorder(freqList);
-
-    // сортировка по убыванию частоты
     std::sort(freqList.begin(), freqList.end(),
               [](const auto &lhs, const auto &rhs) {
                   return lhs.second > rhs.second;
               });
-
     std::ofstream outputFile("result/freq.txt");
     for (const auto &entry : freqList) {
         std::cout << entry.first << " " << entry.second << std::endl;
