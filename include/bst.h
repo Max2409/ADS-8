@@ -7,7 +7,6 @@
 template <typename T>
 class BST {
  private:
-    // узел дерева
     struct Node {
         T key;
         int count;
@@ -18,7 +17,6 @@ class BST {
 
     Node *root;
 
-    // вспомогательные приватные методы
     void destroy(Node *node);
     Node *insert(Node *node, const T &value);
     int  depth(Node *node) const;
@@ -32,7 +30,7 @@ class BST {
     BST &operator=(const BST &) = delete;
 
     void insert(const T &value);
-    bool search(const T &value) const;
+    int  search(const T &value) const;   // теперь возвращает счётчик
     int  depth() const;
     void inorder(std::vector<std::pair<T, int>> &result) const;
 };
@@ -56,7 +54,7 @@ typename BST<T>::Node *BST<T>::insert(Node *node, const T &value) {
     } else if (value > node->key) {
         node->right = insert(node->right, value);
     } else {
-        node->count++;   // увеличиваем счётчик
+        node->count++;
     }
     return node;
 }
@@ -67,23 +65,23 @@ void BST<T>::insert(const T &value) {
 }
 
 template <typename T>
-bool BST<T>::search(const T &value) const {
+int BST<T>::search(const T &value) const {
     for (Node *cur = root; cur != nullptr; ) {
         if (value < cur->key) {
             cur = cur->left;
         } else if (value > cur->key) {
             cur = cur->right;
         } else {
-            return true;
+            return cur->count;      // возвращаем счётчик
         }
     }
-    return false;
+    return 0;                      // не найдено
 }
 
 template <typename T>
 int BST<T>::depth(Node *node) const {
     if (node == nullptr) {
-        return 0;
+        return -1;                 // база: высота пустого поддерева в рёбрах
     }
     int leftDepth  = depth(node->left);
     int rightDepth = depth(node->right);
